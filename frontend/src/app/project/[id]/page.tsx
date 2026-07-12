@@ -29,7 +29,7 @@ interface Project {
 
 async function getProject(id: string): Promise<Project | null> {
   try {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend-ibkyyhops.vercel.app';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
     const res = await fetch(`${API_URL}/backend/admin/api/portfolio`, { cache: 'no-store' });
     if (!res.ok) {
       throw new Error(`Failed to fetch portfolio: ${res.status}`);
