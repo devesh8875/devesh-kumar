@@ -5,8 +5,12 @@ const nextConfig: NextConfig = {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
     return [
       {
-        source: '/backend/admin/:path*',
-        destination: `${backendUrl}/backend/admin/:path*`,
+        source: '/backend/admin',
+        destination: `${backendUrl}/backend/admin`,
+      },
+      {
+        source: '/backend/admin/:path+',
+        destination: `${backendUrl}/backend/admin/:path+`,
       },
     ];
   },
