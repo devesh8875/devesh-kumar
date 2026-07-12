@@ -15,8 +15,19 @@ export async function OPTIONS() {
   return setCorsHeaders(res);
 }
 
+import { kv } from '@vercel/kv';
+
 export async function GET() {
   try {
+    // Try to get data from KV database first
+    const kvData = await kv.get('portfolio-data');
+    
+    if (kvData) {
+      const res = NextResponse.json(kvData);
+      return setCorsHeaders(res);
+    }
+
+    // Fallback to initial local JSON if KV is empty
     const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const data = JSON.parse(fileContent);
@@ -24,7 +35,16 @@ export async function GET() {
     return setCorsHeaders(res);
   } catch (error) {
     console.error('Error reading portfolio data:', error);
-    const res = NextResponse.json({ error: 'Failed to read portfolio data' }, { status: 500 });
-    return setCorsHeaders(res);
+    // If KV fails entirely, fallback to local JSON
+    try {
+      const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
+      const fileContent = await fs.readFile(filePath, 'utf-8');
+      const data = JSON.parse(fileContent);
+      const res = NextResponse.json(data);
+      return setCorsHeaders(res);
+    } catch (fallbackError) {
+      const res = NextResponse.json({ error: 'Failed to read portfolio data' }, { status: 500 });
+      return setCorsHeaders(res);
+    }
   }
 }

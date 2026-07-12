@@ -15,6 +15,8 @@ export async function OPTIONS() {
   return setCorsHeaders(res);
 }
 
+import { kv } from '@vercel/kv';
+
 export async function POST(request: NextRequest) {
   try {
     const session = request.cookies.get('admin_session');
@@ -31,8 +33,15 @@ export async function POST(request: NextRequest) {
       return setCorsHeaders(res);
     }
 
-    const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
-    await fs.writeFile(filePath, JSON.stringify(newData, null, 2), 'utf-8');
+    // Try saving to Vercel KV first (Production)
+    try {
+      await kv.set('portfolio-data', newData);
+    } catch (kvError) {
+      console.warn('Vercel KV save failed, falling back to local file system', kvError);
+      // Fallback for local development
+      const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
+      await fs.writeFile(filePath, JSON.stringify(newData, null, 2), 'utf-8');
+    }
 
     const res = NextResponse.json({ success: true });
     return setCorsHeaders(res);
