@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+  --font-outfit: 'Outfit', sans-serif;
+  --background: #030303;
+  --foreground: #f3f4f6;
+  --card-bg: rgba(13, 13, 20, 0.6);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --cyan-glow: rgba(6, 182, 212, 0.15);
+  --purple-glow: rgba(168, 85, 247, 0.15);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-outfit);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Glassmorphism utilities */
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-nav {
+  background: rgba(3, 3, 3, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #06b6d4;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+  outline: none;
+}
+
+/* Premium glows */
+.glow-card-cyan {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.glow-card-cyan:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 0 25px var(--cyan-glow);
+}
+
+.glow-card-purple {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.glow-card-purple:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 25px var(--purple-glow);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.6);
+}
+
+/* Custom 3D animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Neon Text */
+.text-neon-cyan {
+  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+.text-neon-purple {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Timeline Style */
+.timeline-line {
+  background: linear-gradient(to bottom, transparent, rgba(6, 182, 212, 0.5) 15%, rgba(168, 85, 247, 0.5) 85%, transparent);
+}
+
+/* Premium Gradient Border Button */
+.btn-gradient-border {
+  border: 1px solid transparent;
+  background: linear-gradient(#030303, #030303) padding-box,
+              linear-gradient(to right, #ff2e2e, #ff6b3d) border-box;
+  color: #ff2e2e;
+  transition: all 0.3s ease;
+}
+.btn-gradient-border:hover {
+  background: linear-gradient(rgba(255, 46, 46, 0.1), rgba(255, 46, 46, 0.1)) padding-box,
+              linear-gradient(to right, #ff4444, #ff7b4d) border-box;
+  color: #ff4444;
+}
+

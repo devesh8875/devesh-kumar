@@ -1,0 +1,198 @@
+{
+  "homePage": {
+    "hero": {
+      "greeting": "HI, I'M",
+      "firstName": "DEVESH",
+      "role": "UI/UX DESIGNER",
+      "description": "Crafting digital experiences that bridge the gap between user needs and business goals.",
+      "location": "GREATER NOIDA, UP",
+      "education": "GALGOTIAS UNIVERSITY",
+      "work": "CSG TECHNOSOL PVT. LTD.",
+      "button1Text": "PROJECTS",
+      "button1Url": "#projects",
+      "button2Text": "CONNECT WITH ME",
+      "button2Url": "#contact",
+      "linkedin": "https://www.linkedin.com/in/devesh-kumar-8114k/",
+      "behance": "https://www.behance.net/",
+      "figma": "https://www.figma.com/",
+      "email": "designerdevesh8875@gmail.com",
+      "portraitUrl": "/uploads/upload-1783853406634.png"
+    }
+  },
+  "profile": {
+    "name": "Devesh Kumar",
+    "title": "UI/UX Designer",
+    "email": "designerdevesh8875@gmail.com",
+    "phone": "+91 8875697412",
+    "location": "B-52, Lagerstromia Estate Chi 4, Greater Noida, Uttar Pradesh",
+    "objective": "Aspiring to leverage design skills and an innovative mindset to drive creative solutions in the field of Design.",
+    "linkedin": "https://www.linkedin.com/in/devesh-kumar-8114k/",
+    "behance": "https://www.behance.net/",
+    "figma": "https://www.figma.com/",
+    "github": "https://github.com/",
+    "cvLink": ""
+  },
+  "education": {
+    "degree": "B.tech in Computer Science and Engineering",
+    "school": "Galgotias University",
+    "location": "Greater Noida, Uttar Pradesh",
+    "cgpa": "6.46",
+    "graduation": "Expected Graduation July 2025"
+  },
+  "skills": {
+    "designSkills": [
+      "UI/UX",
+      "Wireframing",
+      "Prototyping",
+      "Logo",
+      "Video Editing",
+      "Carousel",
+      "Typography",
+      "Color Theory"
+    ],
+    "otherSkills": [
+      "Teamwork",
+      "Leadership",
+      "Project Management",
+      "Creativity",
+      "Problem Solving"
+    ],
+    "tools": [
+      "Figma",
+      "Adobe Photoshop",
+      "Adobe Illustrator",
+      "Adobe Premiere Pro",
+      "Adobe After Effect",
+      "Canva",
+      "AI Tools"
+    ]
+  },
+  "experience": [
+    {
+      "id": 1,
+      "role": "Ui/Ux Designer",
+      "company": "CSG TechnoSol Private Limited",
+      "location": "Noida, India",
+      "duration": "June 2025 - Present",
+      "details": [
+        "Designed end-to-end user interfaces and interactive wireframes for modern web applications.",
+        "Collaborated with product teams to build visual hierarchies and interactive animations.",
+        "Enhanced design consistency by creating and maintaining scalable Figma design systems."
+      ]
+    },
+    {
+      "id": 2,
+      "role": "Graphic Design Intern",
+      "company": "Botlie Software & Consulting Pvt. Ltd.",
+      "location": "Greater Noida, India",
+      "duration": "July 2024 - Nov 2024",
+      "details": [
+        "Created high-impact social media posters, logos and videos for the companies.",
+        "By creatively content with stunning visuals, boosted engagement & brand awareness."
+      ]
+    },
+    {
+      "id": 3,
+      "role": "Graphic Design Freelancer",
+      "company": "The Right Lab",
+      "location": "Remote",
+      "duration": "July 2023 - Sep 2023",
+      "details": [
+        "Integrated graphic design skills with specific components to create innovative visual posts.",
+        "Applied graphic design principles to develop user-friendly interfaces."
+      ]
+    },
+    {
+      "id": 4,
+      "role": "Graphic Design Freelancer",
+      "company": "The Brand Global TV",
+      "location": "Remote",
+      "duration": "Dec 2022 - Feb 2023",
+      "details": [
+        "Designed eye catching magazine covers, interactive social media posts, and event logos.",
+        "Used design fundamentals to create visually appropriate media on different working disciplines."
+      ]
+    },
+    {
+      "id": 5,
+      "role": "Graphic Design Intern",
+      "company": "Habitat For Humanity Trust",
+      "location": "Remote",
+      "duration": "Sep 2022 - Oct 2022",
+      "details": [
+        "Demonstrated expertise in visual branding and digital communication.",
+        "By creating impactful logos, dynamic poster designs, and engaging website pages."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "smart-home-integration",
+      "title": "Smart Home Integration Web Application",
+      "category": "UI/UX & Interactive Design",
+      "description": "Crafted an intuitive, user-centered interface for planning smart home interior. Designed interactive elements with smooth transitions and animations, enhancing user engagement and providing clear visual feedback for actions.",
+      "tech": [
+        "Figma",
+        "Next.js",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Three.js"
+      ],
+      "image": "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=800",
+      "figmaLink": "https://www.figma.com",
+      "behanceLink": "https://www.behance.net",
+      "liveLink": "",
+      "longDescription": "This application allows homeowners to plan and preview their smart device configurations interactively. Built to show real-time transitions and mock home environments, creating a highly visual and responsive utility dashboard for modern living room and kitchen layouts."
+    },
+    {
+      "id": "quantum-fintech",
+      "title": "Quantum Bank Mobile App",
+      "category": "Mobile Product Design",
+      "description": "Designed a modern mobile banking experience focused on asset tracking, smooth transfers, and glassmorphic UI cards.",
+      "tech": [
+        "Figma",
+        "Adobe Illustrator",
+        "Color Theory",
+        "Prototyping"
+      ],
+      "image": "https://images.unsplash.com/photo-1563013544-824ae1d704d3?auto=format&fit=crop&q=80&w=800",
+      "figmaLink": "https://www.figma.com",
+      "behanceLink": "https://www.behance.net",
+      "liveLink": "",
+      "longDescription": "A mobile interface for the tech-savvy generation. Focuses on minimal, highly contrast screens that make reading numbers and statistics quick. Features custom charts, multi-currency wallets, and step-by-step transaction walkthroughs with subtle micro-interactions."
+    },
+    {
+      "id": "gdg-event-branding",
+      "title": "GDG Fest Branding & Asset Pack",
+      "category": "Graphic Design & Branding",
+      "description": "A vibrant series of posters, carousels, and typography assets created for tech events, using color psychology to boost engagement.",
+      "tech": [
+        "Adobe Photoshop",
+        "Adobe After Effect",
+        "Canva",
+        "AI Tools"
+      ],
+      "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800",
+      "figmaLink": "",
+      "behanceLink": "https://www.behance.net",
+      "liveLink": "",
+      "longDescription": "Developed visual identity templates and event banners. Used custom typography grid guidelines to construct social media carousels and promotional videos, achieving a unified brand presentation for physical and digital banners."
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Google Build Wireframes and Low-Fidelity Prototypes",
+      "issuer": "Google / Coursera",
+      "link": "https://www.coursera.org"
+    }
+  ],
+  "achievements": [
+    "Cricket District Player",
+    "Got second prize in the Logo Competition",
+    "Certificates: World Environment Summit, Smart India Hackathon, Dexterix, Unifest, Cyber Knight, SAY NO TO PICSART Workshop, MotoGP Bharat, Cinemastro, Designathon, Picture Abhi Baki Hai"
+  ],
+  "extracurriculars": [
+    "Attended a Google Developer Group Fest",
+    "Former Club Head of Graphex Club (Student Council) of Galgotias University"
+  ]
+}
