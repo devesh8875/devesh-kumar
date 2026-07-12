@@ -96,7 +96,8 @@ interface PortfolioData {
 
 async function getPortfolioData(): Promise<PortfolioData> {
   try {
-    const res = await fetch('http://localhost:5000/backend/admin/api/portfolio', { cache: 'no-store' });
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend-ibkyyhops.vercel.app';
+    const res = await fetch(`${API_URL}/backend/admin/api/portfolio`, { cache: 'no-store' });
     if (!res.ok) {
       throw new Error(`Failed to fetch: ${res.status}`);
     }

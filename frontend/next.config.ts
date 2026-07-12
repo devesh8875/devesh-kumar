@@ -2,10 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend-ibkyyhops.vercel.app';
     return [
       {
         source: '/backend/admin/:path*',
-        destination: 'http://localhost:5000/backend/admin/:path*',
+        destination: `${backendUrl}/backend/admin/:path*`,
       },
     ];
   },
