@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       try {
         const client = await clientPromise;
         const db = client.db('portfolio_db');
-        const collection = db.collection('portfolio_data');
+        const collection = db.collection<{ _id: string; data: any; updatedAt?: Date }>('portfolio_data');
         
         // Upsert the main document
         await collection.updateOne(

@@ -24,7 +24,7 @@ export async function GET() {
       try {
         const client = await clientPromise;
         const db = client.db('portfolio_db');
-        const collection = db.collection('portfolio_data');
+        const collection = db.collection<{ _id: string; data: any }>('portfolio_data');
         
         // Find the single document storing the portfolio data
         const mongoData = await collection.findOne({ _id: 'main' });
