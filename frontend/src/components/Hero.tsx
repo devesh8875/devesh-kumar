@@ -104,7 +104,7 @@ export default function Hero({ heroData, profile }: HeroProps) {
           {/* Right Column Details */}
           <div className="col-span-1 md:col-span-4 flex flex-col items-start md:items-end gap-5 text-xs uppercase font-mono tracking-widest text-gray-400 md:text-right filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">
             <div className="border-b border-white/10 pb-2 w-full md:w-auto">
-              <span className="text-[10px] text-gray-500 block">Location</span>
+              <span className="text-[10px] text-gray-500 block">based in</span>
               <span className="text-white font-bold text-sm tracking-wide">{heroData.location}</span>
             </div>
             <div className="border-b border-white/10 pb-2 w-full md:w-auto">
