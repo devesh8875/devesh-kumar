@@ -15,19 +15,30 @@ export async function OPTIONS() {
   return setCorsHeaders(res);
 }
 
-import { kv } from '@vercel/kv';
+import clientPromise from '@/lib/mongodb';
 
 export async function GET() {
   try {
-    // Try to get data from KV database first
-    const kvData = await kv.get('portfolio-data');
-    
-    if (kvData) {
-      const res = NextResponse.json(kvData);
-      return setCorsHeaders(res);
+    // Try to get data from MongoDB first
+    if (clientPromise) {
+      try {
+        const client = await clientPromise;
+        const db = client.db('portfolio_db');
+        const collection = db.collection('portfolio_data');
+        
+        // Find the single document storing the portfolio data
+        const mongoData = await collection.findOne({ _id: 'main' });
+        
+        if (mongoData && mongoData.data) {
+          const res = NextResponse.json(mongoData.data);
+          return setCorsHeaders(res);
+        }
+      } catch (mongoError) {
+        console.warn('MongoDB connection/query failed, falling back to local file', mongoError);
+      }
     }
 
-    // Fallback to initial local JSON if KV is empty
+    // Fallback to initial local JSON if MongoDB is empty or disconnected
     const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
     const fileContent = await fs.readFile(filePath, 'utf-8');
     const data = JSON.parse(fileContent);
@@ -35,16 +46,8 @@ export async function GET() {
     return setCorsHeaders(res);
   } catch (error) {
     console.error('Error reading portfolio data:', error);
-    // If KV fails entirely, fallback to local JSON
-    try {
-      const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
-      const fileContent = await fs.readFile(filePath, 'utf-8');
-      const data = JSON.parse(fileContent);
-      const res = NextResponse.json(data);
-      return setCorsHeaders(res);
-    } catch (fallbackError) {
-      const res = NextResponse.json({ error: 'Failed to read portfolio data' }, { status: 500 });
-      return setCorsHeaders(res);
-    }
+    // If fallback fails entirely
+    const res = NextResponse.json({ error: 'Failed to read portfolio data' }, { status: 500 });
+    return setCorsHeaders(res);
   }
 }

@@ -15,7 +15,7 @@ export async function OPTIONS() {
   return setCorsHeaders(res);
 }
 
-import { kv } from '@vercel/kv';
+import clientPromise from '@/lib/mongodb';
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,15 +33,30 @@ export async function POST(request: NextRequest) {
       return setCorsHeaders(res);
     }
 
-    // Try saving to Vercel KV first (Production)
-    try {
-      await kv.set('portfolio-data', newData);
-    } catch (kvError) {
-      console.warn('Vercel KV save failed, falling back to local file system', kvError);
-      // Fallback for local development
-      const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
-      await fs.writeFile(filePath, JSON.stringify(newData, null, 2), 'utf-8');
+    // Try saving to MongoDB Atlas first (Production)
+    if (clientPromise) {
+      try {
+        const client = await clientPromise;
+        const db = client.db('portfolio_db');
+        const collection = db.collection('portfolio_data');
+        
+        // Upsert the main document
+        await collection.updateOne(
+          { _id: 'main' },
+          { $set: { data: newData, updatedAt: new Date() } },
+          { upsert: true }
+        );
+        
+        const res = NextResponse.json({ success: true });
+        return setCorsHeaders(res);
+      } catch (mongoError) {
+        console.warn('MongoDB save failed, falling back to local file system', mongoError);
+      }
     }
+
+    // Fallback for local development
+    const filePath = path.join(process.cwd(), 'src/data/portfolio-data.json');
+    await fs.writeFile(filePath, JSON.stringify(newData, null, 2), 'utf-8');
 
     const res = NextResponse.json({ success: true });
     return setCorsHeaders(res);
