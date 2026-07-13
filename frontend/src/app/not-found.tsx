@@ -1,7 +1,36 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 
-export default function NotFound() {
+export default async function NotFound() {
+  let title = "Oops! Page not Found";
+  let description = "The page you are looking for cannot be found. take a break before trying again";
+
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
+    const res = await fetch(`${backendUrl}/api/portfolio`, {
+      next: { revalidate: 60 } // Cache for 60s
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.notFound) {
+        if (data.notFound.title) title = data.notFound.title;
+        if (data.notFound.description) description = data.notFound.description;
+      }
+    }
+  } catch (error) {
+    console.error("Failed to fetch 404 data", error);
+  }
+
+  // Split title if it contains "Oops!" for styling
+  const splitIndex = title.indexOf('Oops!');
+  let titleFirstPart = "";
+  let titleSecondPart = title;
+
+  if (splitIndex !== -1) {
+    titleFirstPart = "Oops! ";
+    titleSecondPart = title.substring(splitIndex + 5).trim();
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col relative overflow-hidden font-poppins selection:bg-[#ff2e2e]/30 selection:text-white">
       {/* Grid Background Pattern */}
@@ -42,13 +71,13 @@ export default function NotFound() {
 
         {/* Heading */}
         <h2 className="text-3xl md:text-5xl font-bold mb-6 text-center">
-          <span className="text-white">Oops! </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b3d] to-[#ff2e2e] font-normal italic">Page not Found</span>
+          {titleFirstPart && <span className="text-white">{titleFirstPart}</span>}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b3d] to-[#ff2e2e] font-normal italic">{titleSecondPart}</span>
         </h2>
 
         {/* Subtext */}
         <p className="text-gray-400 text-sm md:text-base max-w-md text-center mb-10 leading-relaxed font-mono tracking-wide">
-          The page you are looking for cannot be found. take a break before trying again
+          {description}
         </p>
 
         {/* Button */}

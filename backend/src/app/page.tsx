@@ -13,7 +13,8 @@ import {
   Save, 
   Plus, 
   Trash2, 
-  LogOut
+  LogOut,
+  AlertTriangle
 } from 'lucide-react';
 import '@/app/globals.css';
 
@@ -88,8 +89,14 @@ interface ProjectItem {
   longDescription?: string;
 }
 
+interface NotFoundData {
+  title: string;
+  description: string;
+}
+
 interface PortfolioData {
   homePage: HomePage;
+  notFound?: NotFoundData;
   profile: Profile;
   education: Education;
   skills: Skills;
@@ -100,7 +107,7 @@ interface PortfolioData {
   extracurriculars: string[];
 }
 
-type TabType = 'home' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
+type TabType = 'home' | 'notFound' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<PortfolioData | null>(null);
@@ -211,6 +218,16 @@ export default function AdminDashboard() {
         hero: { ...data.homePage.hero, [field]: value }
       }
     });
+  };
+
+  const updateNotFound = (field: keyof NotFoundData, value: string) => {
+    setData((prev) => prev ? {
+      ...prev,
+      notFound: {
+        ...(prev.notFound || { title: 'Oops! Page not Found', description: 'The page you are looking for cannot be found. take a break before trying again' }),
+        [field]: value
+      }
+    } : null);
   };
 
   const updateProfile = (field: keyof Profile, value: string) => {
@@ -398,6 +415,12 @@ export default function AdminDashboard() {
               <Home size={18} /> Home Page
             </button>
             <button
+              onClick={() => setActiveTab('notFound')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'notFound' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            >
+              <AlertTriangle size={18} /> 404 Page
+            </button>
+            <button
               onClick={() => setActiveTab('profile')}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'profile' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
             >
@@ -551,6 +574,23 @@ export default function AdminDashboard() {
                 <div className="space-y-1">
                   <label className="text-xs text-gray-400 font-semibold uppercase">Button 2 Redirect URL</label>
                   <input type="text" value={data.homePage?.hero?.button2Url || ''} onChange={(e) => updateHomePageHero('button2Url', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 404 PAGE TAB */}
+          {activeTab === 'notFound' && (
+            <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+              <h2 className="text-lg font-bold text-white">404 Error Page Content</h2>
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs text-gray-400 font-semibold uppercase">Title</label>
+                  <input type="text" value={data.notFound?.title || 'Oops! Page not Found'} onChange={(e) => updateNotFound('title', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs text-gray-400 font-semibold uppercase">Description</label>
+                  <textarea rows={3} value={data.notFound?.description || 'The page you are looking for cannot be found. take a break before trying again'} onChange={(e) => updateNotFound('description', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
                 </div>
               </div>
             </div>
