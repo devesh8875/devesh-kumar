@@ -156,6 +156,28 @@ export default function AdminDashboard() {
           throw new Error('Failed to load portfolio');
         }
         const portfolioData = await res.json();
+        
+        // Polyfill FAQ Data if missing in MongoDB
+        if (!portfolioData.faqData) {
+          portfolioData.faqData = {
+            headerTitle: 'FAQs',
+            breadcrumb: 'Home / FAQs',
+            mainHeading: 'Questions? Look here.',
+            questions: [
+              { id: 1, question: 'Are you available for freelance or contract design work?', answer: 'Yes, I am open to freelance and contract opportunities.' },
+              { id: 2, question: 'What industries do you specialize in?', answer: 'I have experience in various industries including tech, e-commerce, and healthcare.' },
+              { id: 3, question: 'What design tools do you use in your workflow?', answer: 'I primarily use Figma, Adobe XD, and Illustrator.' }
+            ],
+            contactBox: {
+              title: 'You have different questions? Ask Away!',
+              subtitle: 'Your Questions, My Answers. Quick Responses Guaranteed.',
+              buttonText: 'Contact Us',
+              phoneText: 'Available 24/7',
+              phoneNumber: '(000) 000-0000'
+            }
+          };
+        }
+        
         setData(portfolioData);
       } catch (err) {
         // Silent redirect to login page if unauthenticated
