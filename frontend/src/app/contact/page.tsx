@@ -108,12 +108,6 @@ export default async function ContactPage() {
                 <p><span className="font-semibold text-white">Email: </span>{contactData.email}</p>
               </div>
             </div>
-            <div>
-              <h3 className="text-[#ff4a1c] font-bold text-xl mb-4">{contactData.timeTitle}</h3>
-              <div className="space-y-2 text-gray-400">
-                <p>{contactData.time1}</p>
-                <p>{contactData.time2}</p>
-              </div>
             </div>
           </div>
           

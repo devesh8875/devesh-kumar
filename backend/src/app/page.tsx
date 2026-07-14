@@ -128,9 +128,6 @@ interface ContactData {
   contactTitle: string;
   phone: string;
   email: string;
-  timeTitle: string;
-  time1: string;
-  time2: string;
   socialTitle: string;
 }
 
@@ -208,9 +205,6 @@ export default function AdminDashboard() {
             contactTitle: 'Contact',
             phone: '+0123-456-789',
             email: 'example@gmail.com',
-            timeTitle: 'Time',
-            time1: 'Monday - Friday : 10:00 - 20:00',
-            time2: 'Saturday - Sunday : 11:00 - 18:00',
             socialTitle: 'Stay Connected'
           };
         }
@@ -658,7 +652,7 @@ export default function AdminDashboard() {
                           <th className="px-6 py-4">Date</th>
                           <th className="px-6 py-4">Name</th>
                           <th className="px-6 py-4">Email / Phone</th>
-                          <th className="px-6 py-4">Interest / Budget</th>
+                          <th className="px-6 py-4">Interest</th>
                           <th className="px-6 py-4">Message</th>
                         </tr>
                       </thead>
@@ -673,7 +667,6 @@ export default function AdminDashboard() {
                             </td>
                             <td className="px-6 py-4">
                               <div>{msg.interest}</div>
-                              <div className="text-xs text-gray-500">{msg.budget}</div>
                             </td>
                             <td className="px-6 py-4 max-w-xs truncate" title={msg.message}>{msg.message}</td>
                           </tr>
@@ -928,18 +921,6 @@ export default function AdminDashboard() {
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-semibold uppercase">Email</label>
                     <input type="email" value={data.contactData.email} onChange={(e) => updateContactData('email', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Box Title</label>
-                    <input type="text" value={data.contactData.timeTitle} onChange={(e) => updateContactData('timeTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Slot 1</label>
-                    <input type="text" value={data.contactData.time1} onChange={(e) => updateContactData('time1', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Slot 2</label>
-                    <input type="text" value={data.contactData.time2} onChange={(e) => updateContactData('time2', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
                   </div>
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-semibold uppercase">Social Links Title</label>

@@ -9,8 +9,6 @@ export default function ContactForm() {
     email: '',
     phone: '',
     interest: '',
-    budget: '',
-    country: '',
     message: ''
   });
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,7 @@ export default function ContactForm() {
       const result = await res.json();
       if (res.ok) {
         setStatus({ type: 'success', message: 'Message sent successfully! I will get back to you soon.' });
-        setFormData({ name: '', email: '', phone: '', interest: '', budget: '', country: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', interest: '', message: '' });
       } else {
         setStatus({ type: 'error', message: result.error || 'Failed to send message.' });
       }
@@ -101,46 +99,6 @@ export default function ContactForm() {
               <option value="Web Development">Web Development</option>
               <option value="Mobile App">Mobile App</option>
               <option value="Branding">Branding</option>
-              <option value="Other">Other</option>
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-          </div>
-        </div>
-        <div className="space-y-2 relative">
-          <label className="text-sm font-semibold text-white">Budget Range (USD) *</label>
-          <div className="relative">
-            <select 
-              name="budget" 
-              value={formData.budget} 
-              onChange={handleChange} 
-              required 
-              className="w-full px-4 py-3 bg-[#111] border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-[#ff6b3d] transition-colors cursor-pointer"
-            >
-              <option value="" disabled hidden>Select Range</option>
-              <option value="Under $1,000">Under $1,000</option>
-              <option value="$1,000 - $5,000">$1,000 - $5,000</option>
-              <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-              <option value="$10,000+">$10,000+</option>
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
-          </div>
-        </div>
-        <div className="space-y-2 relative">
-          <label className="text-sm font-semibold text-white">Country *</label>
-          <div className="relative">
-            <select 
-              name="country" 
-              value={formData.country} 
-              onChange={handleChange} 
-              required 
-              className="w-full px-4 py-3 bg-[#111] border border-white/10 rounded-xl text-white appearance-none focus:outline-none focus:border-[#ff6b3d] transition-colors cursor-pointer"
-            >
-              <option value="" disabled hidden>Select Country</option>
-              <option value="India">India</option>
-              <option value="United States">United States</option>
-              <option value="United Kingdom">United Kingdom</option>
-              <option value="Canada">Canada</option>
-              <option value="Australia">Australia</option>
               <option value="Other">Other</option>
             </select>
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
