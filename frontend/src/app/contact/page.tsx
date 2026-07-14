@@ -132,13 +132,7 @@ export default async function ContactPage() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
                 </a>
                 <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#ff4a1c] hover:scale-110 transition-transform">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.6 19.33c-.06-.8-.11-2.03.02-2.91l1.45-6.17s-.37-.74-.37-1.84c0-1.73 1-3.02 2.25-3.02 1.06 0 1.57.8 1.57 1.75 0 1.07-.68 2.67-1.04 4.15-.3.12-.55 1.76.8 1.76 1.83 0 3.23-1.93 3.23-4.7 0-2.45-1.76-4.16-4.28-4.16-2.9 0-4.6 2.18-4.6 4.42 0 1.07.4 2.22.93 2.85.1.12.12.23.09.34l-.3 1.25c-.04.16-.14.2-.3.12-1.14-.53-1.85-2.2-1.85-3.53 0-2.87 2.08-5.5 6-5.5 3.16 0 5.6 2.25 5.6 5.25 0 3.13-1.98 5.65-4.72 5.65-1.02 0-1.98-.53-2.3-1.15l-.63 2.4c-.23.86-.85 1.95-1.27 2.62A9.98 9.98 0 0 0 12 22a10 10 0 0 0 0-20z"></path></svg>
-                </a>
-                <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#ff4a1c] hover:scale-110 transition-transform">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                </a>
-                <a href="#" className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#ff4a1c] hover:scale-110 transition-transform">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.94C18.88 4 12 4 12 4s-6.88 0-8.6.48a2.78 2.78 0 0 0-1.94 1.94C1 8.14 1 12 1 12s0 3.86.46 5.58a2.78 2.78 0 0 0 1.94 1.94C5.12 20 12 20 12 20s6.88 0 8.6-.48a2.78 2.78 0 0 0 1.94-1.94C23 15.86 23 12 23 12s0-3.86-.46-5.58zM9.54 15.15V8.85l6.45 3.15-6.45 3.15z"></path></svg>
                 </a>
               </div>
             </div>
