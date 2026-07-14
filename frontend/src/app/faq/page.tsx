@@ -24,7 +24,7 @@ export default async function FaqPage() {
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
-    const res = await fetch(`${backendUrl}/api/portfolio`, {
+    const res = await fetch(`${backendUrl}/backend/admin/api/portfolio`, {
       cache: 'no-store'
     });
     if (res.ok) {

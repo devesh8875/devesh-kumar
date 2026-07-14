@@ -27,7 +27,7 @@ export default function ContactForm() {
 
     try {
       const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
-      const res = await fetch(`${backendUrl}/api/contact`, {
+      const res = await fetch(`${backendUrl}/backend/admin/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
