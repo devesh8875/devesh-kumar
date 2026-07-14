@@ -34,6 +34,7 @@ export default function Navbar() {
           <Link href="/#about" className="hover:text-[#ff2e2e] transition-colors">About Me</Link>
           <Link href="/#experience" className="hover:text-[#ff2e2e] transition-colors">Experience</Link>
           <Link href="/#projects" className="hover:text-[#ff2e2e] transition-colors">Projects</Link>
+          <Link href="/faq" className="hover:text-[#ff2e2e] transition-colors">FAQs</Link>
           <Link 
             href="/#contact"
             className="px-5 py-1.5 rounded-full btn-gradient-border font-semibold hover:scale-105 shadow-md shadow-red-500/10 hover:shadow-red-500/20"

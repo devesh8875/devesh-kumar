@@ -14,7 +14,8 @@ import {
   Plus, 
   Trash2, 
   LogOut,
-  AlertTriangle
+  AlertTriangle,
+  HelpCircle
 } from 'lucide-react';
 import '@/app/globals.css';
 
@@ -94,9 +95,29 @@ interface NotFoundData {
   description: string;
 }
 
+interface FaqQuestion {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+interface FaqContact {
+  title: string;
+  subtitle: string;
+  buttonText: string;
+  phoneText: string;
+  phoneNumber: string;
+}
+
+interface FaqData {
+  questions: FaqQuestion[];
+  contactBox: FaqContact;
+}
+
 interface PortfolioData {
   homePage: HomePage;
   notFound?: NotFoundData;
+  faqData?: FaqData;
   profile: Profile;
   education: Education;
   skills: Skills;
@@ -107,7 +128,7 @@ interface PortfolioData {
   extracurriculars: string[];
 }
 
-type TabType = 'home' | 'notFound' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
+type TabType = 'home' | 'notFound' | 'faq' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<PortfolioData | null>(null);
@@ -228,6 +249,43 @@ export default function AdminDashboard() {
         [field]: value
       }
     } : null);
+  };
+
+  const updateFaqQuestion = (index: number, field: keyof FaqQuestion, value: string) => {
+    if (!data || !data.faqData) return;
+    const list = [...data.faqData.questions];
+    list[index] = { ...list[index], [field]: value };
+    setData({ ...data, faqData: { ...data.faqData, questions: list } });
+  };
+
+  const addFaqQuestion = () => {
+    if (!data || !data.faqData) return;
+    const newId = data.faqData.questions.length > 0 ? Math.max(...data.faqData.questions.map(q => q.id)) + 1 : 1;
+    setData({
+      ...data,
+      faqData: {
+        ...data.faqData,
+        questions: [...data.faqData.questions, { id: newId, question: '', answer: '' }]
+      }
+    });
+  };
+
+  const removeFaqQuestion = (index: number) => {
+    if (!data || !data.faqData) return;
+    const list = [...data.faqData.questions];
+    list.splice(index, 1);
+    setData({ ...data, faqData: { ...data.faqData, questions: list } });
+  };
+
+  const updateFaqContact = (field: keyof FaqContact, value: string) => {
+    if (!data || !data.faqData) return;
+    setData({
+      ...data,
+      faqData: {
+        ...data.faqData,
+        contactBox: { ...data.faqData.contactBox, [field]: value }
+      }
+    });
   };
 
   const updateProfile = (field: keyof Profile, value: string) => {
@@ -421,6 +479,12 @@ export default function AdminDashboard() {
               <AlertTriangle size={18} /> 404 Page
             </button>
             <button
+              onClick={() => setActiveTab('faq')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'faq' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            >
+              <HelpCircle size={18} /> FAQ Page
+            </button>
+            <button
               onClick={() => setActiveTab('profile')}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'profile' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
             >
@@ -591,6 +655,62 @@ export default function AdminDashboard() {
                 <div className="space-y-1">
                   <label className="text-xs text-gray-400 font-semibold uppercase">Description</label>
                   <textarea rows={3} value={data.notFound?.description || 'The page you are looking for cannot be found. take a break before trying again'} onChange={(e) => updateNotFound('description', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* FAQ TAB */}
+          {activeTab === 'faq' && data.faqData && (
+            <div className="space-y-6">
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-bold text-white">FAQ Questions</h2>
+                  <button onClick={addFaqQuestion} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-semibold transition-all">
+                    <Plus size={16} /> Add Question
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {data.faqData.questions.map((q, idx) => (
+                    <div key={q.id} className="p-4 rounded-xl border border-white/5 bg-white/[0.02] space-y-4 relative group">
+                      <button onClick={() => removeFaqQuestion(idx)} className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Trash2 size={16} />
+                      </button>
+                      <div className="space-y-1 mr-8">
+                        <label className="text-xs text-gray-400 font-semibold uppercase">Question</label>
+                        <input type="text" value={q.question} onChange={(e) => updateFaqQuestion(idx, 'question', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs text-gray-400 font-semibold uppercase">Answer</label>
+                        <textarea rows={3} value={q.answer} onChange={(e) => updateFaqQuestion(idx, 'answer', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <h2 className="text-lg font-bold text-white">Contact Box Info</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Title</label>
+                    <input type="text" value={data.faqData.contactBox.title} onChange={(e) => updateFaqContact('title', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Subtitle</label>
+                    <input type="text" value={data.faqData.contactBox.subtitle} onChange={(e) => updateFaqContact('subtitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Button Text</label>
+                    <input type="text" value={data.faqData.contactBox.buttonText} onChange={(e) => updateFaqContact('buttonText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Phone Title</label>
+                    <input type="text" value={data.faqData.contactBox.phoneText} onChange={(e) => updateFaqContact('phoneText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Phone Number</label>
+                    <input type="text" value={data.faqData.contactBox.phoneNumber} onChange={(e) => updateFaqContact('phoneNumber', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
                 </div>
               </div>
             </div>
