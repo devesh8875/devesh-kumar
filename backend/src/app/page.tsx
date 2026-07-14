@@ -686,7 +686,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* HOME PAGE TAB */}status & save header */}
+        {/* Floating status & save header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Manage Portfolio</h1>
