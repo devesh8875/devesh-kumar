@@ -15,7 +15,9 @@ import {
   Trash2, 
   LogOut,
   AlertTriangle,
-  HelpCircle
+  HelpCircle,
+  Phone,
+  LayoutDashboard
 } from 'lucide-react';
 import '@/app/globals.css';
 
@@ -117,10 +119,26 @@ interface FaqData {
   contactBox: FaqContact;
 }
 
+interface ContactData {
+  headerTitle: string;
+  breadcrumb: string;
+  mainHeading: string;
+  addressTitle: string;
+  address: string;
+  contactTitle: string;
+  phone: string;
+  email: string;
+  timeTitle: string;
+  time1: string;
+  time2: string;
+  socialTitle: string;
+}
+
 interface PortfolioData {
   homePage: HomePage;
   notFound?: NotFoundData;
   faqData?: FaqData;
+  contactData?: ContactData;
   profile: Profile;
   education: Education;
   skills: Skills;
@@ -131,11 +149,12 @@ interface PortfolioData {
   extracurriculars: string[];
 }
 
-type TabType = 'home' | 'notFound' | 'faq' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
+type TabType = 'dashboard' | 'home' | 'notFound' | 'faq' | 'contact' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<PortfolioData | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>('home');
+  const [messages, setMessages] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
@@ -177,8 +196,38 @@ export default function AdminDashboard() {
             }
           };
         }
+
+        // Polyfill Contact Data
+        if (!portfolioData.contactData) {
+          portfolioData.contactData = {
+            headerTitle: 'Contact Me',
+            breadcrumb: 'Home / Contact Me',
+            mainHeading: 'Lets Talk for Your Next Projects',
+            addressTitle: 'Address',
+            address: '2464 Royal Ln. Mesa, New Jersey 45463',
+            contactTitle: 'Contact',
+            phone: '+0123-456-789',
+            email: 'example@gmail.com',
+            timeTitle: 'Time',
+            time1: 'Monday - Friday : 10:00 - 20:00',
+            time2: 'Saturday - Sunday : 11:00 - 18:00',
+            socialTitle: 'Stay Connected'
+          };
+        }
         
         setData(portfolioData);
+
+        // Load messages
+        try {
+          const msgRes = await fetch('/backend/admin/api/admin/messages');
+          if (msgRes.ok) {
+            const msgData = await msgRes.json();
+            setMessages(msgData.messages || []);
+          }
+        } catch (msgErr) {
+          console.error("Failed to load messages", msgErr);
+        }
+
       } catch (err) {
         // Silent redirect to login page if unauthenticated
         router.push('/login');
@@ -274,6 +323,17 @@ export default function AdminDashboard() {
         [field]: value
       }
     } : null);
+  };
+
+  const updateContactData = (field: keyof ContactData, value: string) => {
+    if (!data || !data.contactData) return;
+    setData({
+      ...data,
+      contactData: {
+        ...data.contactData,
+        [field]: value
+      }
+    });
   };
 
   const updateFaqHeader = (field: keyof FaqData, value: string) => {
@@ -503,6 +563,12 @@ export default function AdminDashboard() {
 
           <nav className="flex flex-col gap-1">
             <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'dashboard' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            >
+              <LayoutDashboard size={18} /> Dashboard
+            </button>
+            <button
               onClick={() => setActiveTab('home')}
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'home' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
             >
@@ -519,6 +585,12 @@ export default function AdminDashboard() {
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'faq' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
             >
               <HelpCircle size={18} /> FAQ Page
+            </button>
+            <button
+              onClick={() => setActiveTab('contact')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'contact' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            >
+              <Phone size={18} /> Contact Page
             </button>
             <button
               onClick={() => setActiveTab('profile')}
@@ -567,10 +639,54 @@ export default function AdminDashboard() {
         </button>
       </aside>
 
-      {/* Main Form Dashboard */}
-      <main className="flex-grow p-6 md:p-10 space-y-6 overflow-y-auto max-h-screen">
-        
-        {/* Floating status & save header */}
+        {/* MAIN CONTENT AREA */}
+        <main className="flex-1 bg-[#0a0a0f] p-4 md:p-8 overflow-y-auto relative">
+          
+          {/* DASHBOARD TAB */}
+          {activeTab === 'dashboard' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-white mb-6">Form Submissions</h2>
+              
+              {messages.length === 0 ? (
+                <div className="text-gray-500 bg-white/5 p-6 rounded-2xl text-center">No messages received yet.</div>
+              ) : (
+                <div className="bg-zinc-950/40 rounded-2xl border border-white/5 overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-gray-300">
+                      <thead className="text-xs uppercase bg-white/5 text-gray-400 border-b border-white/5">
+                        <tr>
+                          <th className="px-6 py-4">Date</th>
+                          <th className="px-6 py-4">Name</th>
+                          <th className="px-6 py-4">Email / Phone</th>
+                          <th className="px-6 py-4">Interest / Budget</th>
+                          <th className="px-6 py-4">Message</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {messages.map((msg, i) => (
+                          <tr key={msg._id || i} className="border-b border-white/5 hover:bg-white/[0.02]">
+                            <td className="px-6 py-4 whitespace-nowrap">{new Date(msg.createdAt).toLocaleDateString()}</td>
+                            <td className="px-6 py-4 font-medium text-white">{msg.name}</td>
+                            <td className="px-6 py-4">
+                              <div>{msg.email}</div>
+                              <div className="text-xs text-gray-500">{msg.phone}</div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div>{msg.interest}</div>
+                              <div className="text-xs text-gray-500">{msg.budget}</div>
+                            </td>
+                            <td className="px-6 py-4 max-w-xs truncate" title={msg.message}>{msg.message}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* HOME PAGE TAB */}status & save header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white">Manage Portfolio</h1>
@@ -763,6 +879,71 @@ export default function AdminDashboard() {
                   <div className="space-y-1">
                     <label className="text-xs text-gray-400 font-semibold uppercase">Phone Number</label>
                     <input type="text" value={data.faqData.contactBox.phoneNumber} onChange={(e) => updateFaqContact('phoneNumber', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CONTACT PAGE TAB */}
+          {activeTab === 'contact' && data.contactData && (
+            <div className="space-y-6">
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <h2 className="text-lg font-bold text-white">Contact Page Header</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Header Title</label>
+                    <input type="text" value={data.contactData.headerTitle} onChange={(e) => updateContactData('headerTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Breadcrumb</label>
+                    <input type="text" value={data.contactData.breadcrumb} onChange={(e) => updateContactData('breadcrumb', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Main Heading</label>
+                    <input type="text" value={data.contactData.mainHeading} onChange={(e) => updateContactData('mainHeading', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <h2 className="text-lg font-bold text-white">Contact Details (Right Card)</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Address Box Title</label>
+                    <input type="text" value={data.contactData.addressTitle} onChange={(e) => updateContactData('addressTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Address</label>
+                    <textarea rows={2} value={data.contactData.address} onChange={(e) => updateContactData('address', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Contact Box Title</label>
+                    <input type="text" value={data.contactData.contactTitle} onChange={(e) => updateContactData('contactTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Phone Number</label>
+                    <input type="text" value={data.contactData.phone} onChange={(e) => updateContactData('phone', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Email</label>
+                    <input type="email" value={data.contactData.email} onChange={(e) => updateContactData('email', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Box Title</label>
+                    <input type="text" value={data.contactData.timeTitle} onChange={(e) => updateContactData('timeTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Slot 1</label>
+                    <input type="text" value={data.contactData.time1} onChange={(e) => updateContactData('time1', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Time Slot 2</label>
+                    <input type="text" value={data.contactData.time2} onChange={(e) => updateContactData('time2', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Social Links Title</label>
+                    <input type="text" value={data.contactData.socialTitle} onChange={(e) => updateContactData('socialTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
                   </div>
                 </div>
               </div>

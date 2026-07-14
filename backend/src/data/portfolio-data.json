@@ -223,5 +223,19 @@
     "headerTitle": "FAQs",
     "breadcrumb": "Home / FAQs",
     "mainHeading": "Questions? Look here."
+  },
+  "contactData": {
+    "headerTitle": "Contact Me",
+    "breadcrumb": "Home / Contact Me",
+    "mainHeading": "Lets Talk for Your Next Projects",
+    "addressTitle": "Address",
+    "address": "2464 Royal Ln. Mesa, New Jersey 45463",
+    "contactTitle": "Contact",
+    "phone": "+0123-456-789",
+    "email": "example@gmail.com",
+    "timeTitle": "Time",
+    "time1": "Monday - Friday : 10:00 - 20:00",
+    "time2": "Saturday - Sunday : 11:00 - 18:00",
+    "socialTitle": "Stay Connected"
   }
 }
