@@ -110,6 +110,9 @@ interface FaqContact {
 }
 
 interface FaqData {
+  headerTitle?: string;
+  breadcrumb?: string;
+  mainHeading?: string;
   questions: FaqQuestion[];
   contactBox: FaqContact;
 }
@@ -249,6 +252,17 @@ export default function AdminDashboard() {
         [field]: value
       }
     } : null);
+  };
+
+  const updateFaqHeader = (field: keyof FaqData, value: string) => {
+    if (!data || !data.faqData) return;
+    setData({
+      ...data,
+      faqData: {
+        ...data.faqData,
+        [field]: value
+      }
+    });
   };
 
   const updateFaqQuestion = (index: number, field: keyof FaqQuestion, value: string) => {
@@ -663,6 +677,23 @@ export default function AdminDashboard() {
           {/* FAQ TAB */}
           {activeTab === 'faq' && data.faqData && (
             <div className="space-y-6">
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <h2 className="text-lg font-bold text-white">Page Header Info</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Header Title</label>
+                    <input type="text" value={data.faqData.headerTitle || 'FAQs'} onChange={(e) => updateFaqHeader('headerTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Breadcrumb</label>
+                    <input type="text" value={data.faqData.breadcrumb || 'Home / FAQs'} onChange={(e) => updateFaqHeader('breadcrumb', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Main Heading</label>
+                    <input type="text" value={data.faqData.mainHeading || 'Questions? Look here.'} onChange={(e) => updateFaqHeader('mainHeading', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                </div>
+              </div>
               <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-bold text-white">FAQ Questions</h2>

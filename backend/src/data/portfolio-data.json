@@ -219,6 +219,9 @@
       "buttonText": "Contact Us",
       "phoneText": "Available 24/7",
       "phoneNumber": "(000) 000-0000"
-    }
+    },
+    "headerTitle": "FAQs",
+    "breadcrumb": "Home / FAQs",
+    "mainHeading": "Questions? Look here."
   }
 }

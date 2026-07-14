@@ -3,6 +3,9 @@ import FaqAccordion from '@/components/FaqAccordion';
 
 export default async function FaqPage() {
   let faqData = {
+    headerTitle: 'FAQs',
+    breadcrumb: 'Home / FAQs',
+    mainHeading: 'Questions? Look here.',
     questions: [
       { id: 1, question: 'Are you available for freelance or contract design work?', answer: 'Yes, I am open to freelance and contract opportunities.' },
       { id: 2, question: 'What industries do you specialize in?', answer: 'I have experience in various industries including tech, e-commerce, and healthcare.' },
@@ -32,6 +35,21 @@ export default async function FaqPage() {
     console.error("Failed to fetch FAQ data", error);
   }
 
+  // Handle breadcrumb splitting (assumes "Something / Something")
+  const breadcrumbParts = faqData.breadcrumb.split('/').map(s => s.trim());
+  const breadcrumbFirst = breadcrumbParts[0] || '';
+  const breadcrumbLast = breadcrumbParts.length > 1 ? breadcrumbParts[breadcrumbParts.length - 1] : '';
+
+  // Handle main heading splitting (to style the second part with gradient)
+  const questionMarkIndex = faqData.mainHeading.indexOf('?');
+  let headingFirst = faqData.mainHeading;
+  let headingSecond = '';
+  
+  if (questionMarkIndex !== -1) {
+    headingFirst = faqData.mainHeading.substring(0, questionMarkIndex + 1);
+    headingSecond = faqData.mainHeading.substring(questionMarkIndex + 1).trim();
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col relative overflow-hidden font-poppins selection:bg-[#ff2e2e]/30 selection:text-white pb-20">
       {/* Grid Background Pattern */}
@@ -50,21 +68,25 @@ export default async function FaqPage() {
 
       {/* Header section similar to the design */}
       <div className="pt-32 pb-16 relative z-10 flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">FAQs</h1>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">{faqData.headerTitle}</h1>
         <div className="text-sm font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
-          <span>Home</span>
-          <span>/</span>
-          <span className="text-[#ff6b3d]">FAQs</span>
+          {breadcrumbFirst && <span>{breadcrumbFirst}</span>}
+          {breadcrumbLast && (
+            <>
+              <span>/</span>
+              <span className="text-[#ff6b3d]">{breadcrumbLast}</span>
+            </>
+          )}
         </div>
       </div>
 
       <div className="relative z-10 text-center mb-10">
         <div className="flex items-center justify-center gap-3 mb-2 text-sm text-gray-400 font-mono uppercase tracking-widest">
           <div className="w-8 h-[1px] bg-[#ff2e2e]"></div>
-          <span>FAQs</span>
+          <span>{faqData.headerTitle}</span>
         </div>
         <h2 className="text-3xl md:text-4xl font-bold">
-          Questions? <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b3d] to-[#ff2e2e] font-normal italic">Look here.</span>
+          {headingFirst} {headingSecond && <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff6b3d] to-[#ff2e2e] font-normal italic">{headingSecond}</span>}
         </h2>
       </div>
 
