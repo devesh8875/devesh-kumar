@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function setCorsHeaders(res: NextResponse) {
   res.headers.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.headers.set('Access-Control-Allow-Credentials', 'true');

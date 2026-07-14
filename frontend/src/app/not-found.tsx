@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NotFound() {
   let title = "Oops! Page not Found";
   let description = "The page you are looking for cannot be found. take a break before trying again";
@@ -8,7 +10,7 @@ export default async function NotFound() {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
     const res = await fetch(`${backendUrl}/api/portfolio`, {
-      next: { revalidate: 60 } // Cache for 60s
+      cache: 'no-store'
     });
     if (res.ok) {
       const data = await res.json();

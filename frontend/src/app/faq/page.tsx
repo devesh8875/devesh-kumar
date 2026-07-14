@@ -1,6 +1,8 @@
 import Navbar from '@/components/Navbar';
 import FaqAccordion from '@/components/FaqAccordion';
 
+export const dynamic = 'force-dynamic';
+
 export default async function FaqPage() {
   let faqData = {
     headerTitle: 'FAQs',
@@ -23,7 +25,7 @@ export default async function FaqPage() {
   try {
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'https://devesh-portfolio-backend.vercel.app';
     const res = await fetch(`${backendUrl}/api/portfolio`, {
-      next: { revalidate: 60 } // Cache for 60s
+      cache: 'no-store'
     });
     if (res.ok) {
       const data = await res.json();
