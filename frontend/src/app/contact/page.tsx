@@ -108,7 +108,6 @@ export default async function ContactPage() {
                 <p><span className="font-semibold text-white">Email: </span>{contactData.email}</p>
               </div>
             </div>
-            </div>
           </div>
           
           {/* Orange bottom section */}
