@@ -1043,7 +1043,6 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
-          )}
 
           {/* PROJECT PAGE TAB */}
           {activeTab === 'projectPage' && data.projectPage && (
