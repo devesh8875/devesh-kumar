@@ -131,6 +131,25 @@ interface ContactData {
   socialTitle: string;
 }
 
+interface ProjectPageProject {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  client: string;
+  duration: string;
+  country: string;
+  image: string;
+  viewDetailsLink: string;
+}
+
+interface ProjectPageData {
+  headerTitle: string;
+  breadcrumb: string;
+  mainHeading: string;
+  projects: ProjectPageProject[];
+}
+
 interface PortfolioData {
   homePage: HomePage;
   notFound?: NotFoundData;
@@ -144,9 +163,10 @@ interface PortfolioData {
   certifications: Array<{ name: string; issuer: string; link: string }>;
   achievements: string[];
   extracurriculars: string[];
+  projectPage?: ProjectPageData;
 }
 
-type TabType = 'dashboard' | 'home' | 'notFound' | 'faq' | 'contact' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements';
+type TabType = 'dashboard' | 'home' | 'notFound' | 'faq' | 'contact' | 'profile' | 'education' | 'skills' | 'experience' | 'projects' | 'achievements' | 'projectPage';
 
 export default function AdminDashboard() {
   const [data, setData] = useState<PortfolioData | null>(null);
@@ -206,6 +226,49 @@ export default function AdminDashboard() {
             phone: '+0123-456-789',
             email: 'example@gmail.com',
             socialTitle: 'Stay Connected'
+          };
+        }
+        // Polyfill Project Page Data
+        if (!portfolioData.projectPage) {
+          portfolioData.projectPage = {
+            headerTitle: 'Projects',
+            breadcrumb: 'Home / Projects',
+            mainHeading: 'Let\'s Have a Look at My Portfolio',
+            projects: [
+              {
+                id: '1',
+                title: 'Recipe App',
+                subtitle: '- Food Recipe Mobile App Solution',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.',
+                client: 'Ava Mitchell',
+                duration: '4 Months',
+                country: 'United States',
+                image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop',
+                viewDetailsLink: '#'
+              },
+              {
+                id: '2',
+                title: 'Ebook',
+                subtitle: '- Ebook and Audio Book App UI',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.',
+                client: 'Robert Fox',
+                duration: '3 Months',
+                country: 'United States',
+                image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop',
+                viewDetailsLink: '#'
+              },
+              {
+                id: '3',
+                title: 'Coworking',
+                subtitle: '- Coworking Space Website UIUX Design',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.',
+                client: 'Lily Morgan',
+                duration: '2 Months',
+                country: 'United States',
+                image: 'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?q=80&w=1000&auto=format&fit=crop',
+                viewDetailsLink: '#'
+              }
+            ]
           };
         }
         
@@ -376,6 +439,50 @@ export default function AdminDashboard() {
         contactBox: { ...data.faqData.contactBox, [field]: value }
       }
     });
+  };
+
+  const updateProjectPageData = (field: keyof ProjectPageData, value: string) => {
+    if (!data || !data.projectPage) return;
+    setData({
+      ...data,
+      projectPage: { ...data.projectPage, [field]: value }
+    });
+  };
+
+  const updateProjectPageProject = (index: number, field: keyof ProjectPageProject, value: string) => {
+    if (!data || !data.projectPage) return;
+    const list = [...data.projectPage.projects];
+    list[index] = { ...list[index], [field]: value };
+    setData({ ...data, projectPage: { ...data.projectPage, projects: list } });
+  };
+
+  const addProjectPageProject = () => {
+    if (!data || !data.projectPage) return;
+    const newId = Date.now().toString();
+    setData({
+      ...data,
+      projectPage: {
+        ...data.projectPage,
+        projects: [...data.projectPage.projects, {
+          id: newId,
+          title: 'New Project',
+          subtitle: '- Subtitle',
+          description: '',
+          client: '',
+          duration: '',
+          country: '',
+          image: '',
+          viewDetailsLink: '#'
+        }]
+      }
+    });
+  };
+
+  const removeProjectPageProject = (index: number) => {
+    if (!data || !data.projectPage) return;
+    const list = [...data.projectPage.projects];
+    list.splice(index, 1);
+    setData({ ...data, projectPage: { ...data.projectPage, projects: list } });
   };
 
   const updateProfile = (field: keyof Profile, value: string) => {
@@ -585,6 +692,12 @@ export default function AdminDashboard() {
               className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'contact' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
             >
               <Phone size={18} /> Contact Page
+            </button>
+            <button
+              onClick={() => setActiveTab('projectPage')}
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === 'projectPage' ? 'bg-cyan-500 text-black shadow-lg shadow-cyan-500/10' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
+            >
+              <FolderGit2 size={18} /> Projects Page
             </button>
             <button
               onClick={() => setActiveTab('profile')}
@@ -926,6 +1039,83 @@ export default function AdminDashboard() {
                     <label className="text-xs text-gray-400 font-semibold uppercase">Social Links Title</label>
                     <input type="text" value={data.contactData.socialTitle} onChange={(e) => updateContactData('socialTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+          )}
+
+          {/* PROJECT PAGE TAB */}
+          {activeTab === 'projectPage' && data.projectPage && (
+            <div className="space-y-6">
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <h2 className="text-lg font-bold text-white">Project Page Header</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Header Title</label>
+                    <input type="text" value={data.projectPage.headerTitle} onChange={(e) => updateProjectPageData('headerTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Breadcrumb</label>
+                    <input type="text" value={data.projectPage.breadcrumb} onChange={(e) => updateProjectPageData('breadcrumb', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                  <div className="space-y-1 md:col-span-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Main Heading</label>
+                    <input type="text" value={data.projectPage.mainHeading} onChange={(e) => updateProjectPageData('mainHeading', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-bold text-white">Project List</h2>
+                  <button onClick={addProjectPageProject} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-semibold transition-all">
+                    <Plus size={16} /> Add Project
+                  </button>
+                </div>
+                <div className="space-y-6">
+                  {data.projectPage.projects.map((proj, idx) => (
+                    <div key={proj.id} className="p-4 rounded-xl border border-white/5 bg-white/[0.02] space-y-4 relative group">
+                      <button onClick={() => removeProjectPageProject(idx)} className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Trash2 size={16} />
+                      </button>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mr-8">
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Title</label>
+                          <input type="text" value={proj.title} onChange={(e) => updateProjectPageProject(idx, 'title', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Subtitle</label>
+                          <input type="text" value={proj.subtitle} onChange={(e) => updateProjectPageProject(idx, 'subtitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Description</label>
+                          <textarea rows={2} value={proj.description} onChange={(e) => updateProjectPageProject(idx, 'description', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Client</label>
+                          <input type="text" value={proj.client} onChange={(e) => updateProjectPageProject(idx, 'client', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Duration</label>
+                          <input type="text" value={proj.duration} onChange={(e) => updateProjectPageProject(idx, 'duration', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Country</label>
+                          <input type="text" value={proj.country} onChange={(e) => updateProjectPageProject(idx, 'country', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">View Details Link</label>
+                          <input type="text" value={proj.viewDetailsLink} onChange={(e) => updateProjectPageProject(idx, 'viewDetailsLink', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Image URL</label>
+                          <input type="text" value={proj.image} onChange={(e) => updateProjectPageProject(idx, 'image', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
