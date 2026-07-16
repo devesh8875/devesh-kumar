@@ -816,6 +816,33 @@ export default function AdminDashboard() {
         {/* MAIN CONTENT AREA */}
         <main className="flex-1 bg-[#0a0a0f] p-4 md:p-8 overflow-y-auto relative">
           
+          {/* Floating status & save header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-white">Manage Portfolio</h1>
+            <p className="text-sm text-gray-400 mt-1">Make changes dynamically and publish updates immediately.</p>
+          </div>
+          
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            {statusMsg && (
+              <span className="text-xs font-semibold text-cyan-400 font-mono py-1.5 px-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+                {statusMsg}
+              </span>
+            )}
+            <button
+              onClick={handlePublish}
+              disabled={saving}
+              className="px-6 py-2.5 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-455 transition-colors flex items-center gap-2 flex-shrink-0 cursor-pointer"
+            >
+              <Save size={16} />
+              {saving ? 'Publishing...' : 'Publish Changes'}
+            </button>
+          </div>
+        </div>
+
+        {/* Dynamic form selector based on tabs */}
+        <div className="pt-2">
+          
           {/* DASHBOARD TAB */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
@@ -859,33 +886,7 @@ export default function AdminDashboard() {
             </div>
           )}
 
-        {/* Floating status & save header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">Manage Portfolio</h1>
-            <p className="text-sm text-gray-400 mt-1">Make changes dynamically and publish updates immediately.</p>
-          </div>
-          
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            {statusMsg && (
-              <span className="text-xs font-semibold text-cyan-400 font-mono py-1.5 px-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
-                {statusMsg}
-              </span>
-            )}
-            <button
-              onClick={handlePublish}
-              disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-455 transition-colors flex items-center gap-2 flex-shrink-0 cursor-pointer"
-            >
-              <Save size={16} />
-              {saving ? 'Publishing...' : 'Publish Changes'}
-            </button>
-          </div>
-        </div>
-
-        {/* Dynamic form selector based on tabs */}
-        <div className="pt-2">
-          
+        
           {/* HOME PAGE TAB */}
           {activeTab === 'home' && (
             <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
