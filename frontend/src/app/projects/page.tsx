@@ -144,7 +144,7 @@ export default async function ProjectsPage() {
 
                       <div>
                         <Link 
-                          href={project.viewDetailsLink}
+                          href={`/projects/${project.id}`}
                           className="inline-flex items-center gap-2 text-[#ff4a1c] font-bold text-sm hover:gap-4 transition-all"
                         >
                           View Details <ArrowUpRight size={16} />

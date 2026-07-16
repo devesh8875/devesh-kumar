@@ -131,6 +131,21 @@ interface ContactData {
   socialTitle: string;
 }
 
+interface ProjectDetailsData {
+  heroImage: string;
+  category: string;
+  challengeText: string;
+  solutionText: string;
+  solutionPoints: string[];
+  solutionImages: string[];
+  impactText: string;
+  testimonialAvatar: string;
+  testimonialName: string;
+  testimonialRole: string;
+  testimonialRating: string;
+  testimonialText: string;
+}
+
 interface ProjectPageProject {
   id: string;
   title: string;
@@ -141,6 +156,7 @@ interface ProjectPageProject {
   country: string;
   image: string;
   viewDetailsLink: string;
+  details?: ProjectDetailsData;
 }
 
 interface ProjectPageData {
@@ -175,6 +191,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusMsg, setStatusMsg] = useState('');
+  
+  // Project Page CMS State
+  const [projectSubTab, setProjectSubTab] = useState<'cards' | 'details'>('cards');
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -244,7 +265,29 @@ export default function AdminDashboard() {
                 duration: '4 Months',
                 country: 'United States',
                 image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop',
-                viewDetailsLink: '#'
+                viewDetailsLink: '/projects/1',
+                details: {
+                  heroImage: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop',
+                  category: 'App UIUX Design',
+                  challengeText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+                  solutionText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+                  solutionPoints: [
+                    'Lorem ipsum dolor',
+                    'Sed ut perspiciatis',
+                    'Vitae dicta sunt explicabo',
+                    'Veritatis et quasi architecto'
+                  ],
+                  solutionImages: [
+                    'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=500&auto=format&fit=crop',
+                    'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=500&auto=format&fit=crop'
+                  ],
+                  impactText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
+                  testimonialAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150',
+                  testimonialName: 'Emma Carter',
+                  testimonialRole: 'CEO, Food Recipe App',
+                  testimonialRating: '5.0',
+                  testimonialText: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem...'
+                }
               },
               {
                 id: '2',
@@ -472,11 +515,35 @@ export default function AdminDashboard() {
           duration: '',
           country: '',
           image: '',
-          viewDetailsLink: '#'
+          viewDetailsLink: '#',
+          details: {
+            heroImage: '',
+            category: '',
+            challengeText: '',
+            solutionText: '',
+            solutionPoints: [],
+            solutionImages: [],
+            impactText: '',
+            testimonialAvatar: '',
+            testimonialName: '',
+            testimonialRole: '',
+            testimonialRating: '',
+            testimonialText: ''
+          }
         }]
       }
     });
   };
+
+  const updateProjectPageProjectDetails = (index: number, field: keyof ProjectDetailsData, value: any) => {
+    if (!data || !data.projectPage) return;
+    const list = [...data.projectPage.projects];
+    const project = list[index];
+    if (!project.details) return; // shouldn't happen with polyfill
+    project.details = { ...project.details, [field]: value };
+    setData({ ...data, projectPage: { ...data.projectPage, projects: list } });
+  };
+
 
   const removeProjectPageProject = (index: number) => {
     if (!data || !data.projectPage) return;
@@ -1047,76 +1114,202 @@ export default function AdminDashboard() {
           {/* PROJECT PAGE TAB */}
           {activeTab === 'projectPage' && data.projectPage && (
             <div className="space-y-6">
-              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
-                <h2 className="text-lg font-bold text-white">Project Page Header</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Header Title</label>
-                    <input type="text" value={data.projectPage.headerTitle} onChange={(e) => updateProjectPageData('headerTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Breadcrumb</label>
-                    <input type="text" value={data.projectPage.breadcrumb} onChange={(e) => updateProjectPageData('breadcrumb', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                  <div className="space-y-1 md:col-span-2">
-                    <label className="text-xs text-gray-400 font-semibold uppercase">Main Heading</label>
-                    <input type="text" value={data.projectPage.mainHeading} onChange={(e) => updateProjectPageData('mainHeading', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                  </div>
-                </div>
+              
+              <div className="flex gap-4 border-b border-white/5 pb-4">
+                <button
+                  onClick={() => setProjectSubTab('cards')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${projectSubTab === 'cards' ? 'bg-cyan-500 text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  Project Cards
+                </button>
+                <button
+                  onClick={() => setProjectSubTab('details')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${projectSubTab === 'details' ? 'bg-cyan-500 text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                >
+                  Project Details
+                </button>
               </div>
 
-              <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-bold text-white">Project List</h2>
-                  <button onClick={addProjectPageProject} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-semibold transition-all">
-                    <Plus size={16} /> Add Project
-                  </button>
-                </div>
-                <div className="space-y-6">
-                  {data.projectPage.projects.map((proj, idx) => (
-                    <div key={proj.id} className="p-4 rounded-xl border border-white/5 bg-white/[0.02] space-y-4 relative group">
-                      <button onClick={() => removeProjectPageProject(idx)} className="absolute top-4 right-4 text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Trash2 size={16} />
-                      </button>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mr-8">
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Title</label>
-                          <input type="text" value={proj.title} onChange={(e) => updateProjectPageProject(idx, 'title', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Subtitle</label>
-                          <input type="text" value={proj.subtitle} onChange={(e) => updateProjectPageProject(idx, 'subtitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1 md:col-span-2">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Description</label>
-                          <textarea rows={2} value={proj.description} onChange={(e) => updateProjectPageProject(idx, 'description', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Client</label>
-                          <input type="text" value={proj.client} onChange={(e) => updateProjectPageProject(idx, 'client', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Duration</label>
-                          <input type="text" value={proj.duration} onChange={(e) => updateProjectPageProject(idx, 'duration', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Country</label>
-                          <input type="text" value={proj.country} onChange={(e) => updateProjectPageProject(idx, 'country', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">View Details Link</label>
-                          <input type="text" value={proj.viewDetailsLink} onChange={(e) => updateProjectPageProject(idx, 'viewDetailsLink', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
-                        <div className="space-y-1 md:col-span-2">
-                          <label className="text-xs text-gray-400 font-semibold uppercase">Image URL</label>
-                          <input type="text" value={proj.image} onChange={(e) => updateProjectPageProject(idx, 'image', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
-                        </div>
+              {projectSubTab === 'cards' && (
+                <>
+                  <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                    <h2 className="text-lg font-bold text-white">Project Page Header</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs text-gray-400 font-semibold uppercase">Header Title</label>
+                        <input type="text" value={data.projectPage.headerTitle} onChange={(e) => updateProjectPageData('headerTitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs text-gray-400 font-semibold uppercase">Breadcrumb</label>
+                        <input type="text" value={data.projectPage.breadcrumb} onChange={(e) => updateProjectPageData('breadcrumb', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                      </div>
+                      <div className="space-y-1 md:col-span-2">
+                        <label className="text-xs text-gray-400 font-semibold uppercase">Main Heading</label>
+                        <input type="text" value={data.projectPage.mainHeading} onChange={(e) => updateProjectPageData('mainHeading', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-lg font-bold text-white">Project Cards List</h2>
+                      <button onClick={addProjectPageProject} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-semibold transition-all">
+                        <Plus size={16} /> Add Project
+                      </button>
+                    </div>
+                    <div className="space-y-6">
+                      {data.projectPage.projects.map((proj, idx) => (
+                        <div key={proj.id} className="p-4 rounded-xl border border-white/5 bg-white/[0.02] space-y-4">
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-white">{proj.title || 'Untitled Project'}</span>
+                            <div className="flex gap-4">
+                              <button onClick={() => setSelectedProjectId(selectedProjectId === proj.id ? null : proj.id)} className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold">
+                                {selectedProjectId === proj.id ? 'Close' : 'Edit'}
+                              </button>
+                              <button onClick={() => removeProjectPageProject(idx)} className="text-red-500 hover:text-red-400 text-sm font-semibold">Delete</button>
+                            </div>
+                          </div>
+                          
+                          {selectedProjectId === proj.id && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-white/10 pt-4 mt-4">
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Title</label>
+                                <input type="text" value={proj.title} onChange={(e) => updateProjectPageProject(idx, 'title', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Subtitle</label>
+                                <input type="text" value={proj.subtitle} onChange={(e) => updateProjectPageProject(idx, 'subtitle', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1 md:col-span-2">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Description</label>
+                                <textarea rows={2} value={proj.description} onChange={(e) => updateProjectPageProject(idx, 'description', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Client</label>
+                                <input type="text" value={proj.client} onChange={(e) => updateProjectPageProject(idx, 'client', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Duration</label>
+                                <input type="text" value={proj.duration} onChange={(e) => updateProjectPageProject(idx, 'duration', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Country</label>
+                                <input type="text" value={proj.country} onChange={(e) => updateProjectPageProject(idx, 'country', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">View Details Link</label>
+                                <input type="text" value={proj.viewDetailsLink} onChange={(e) => updateProjectPageProject(idx, 'viewDetailsLink', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                              <div className="space-y-1 md:col-span-2">
+                                <label className="text-xs text-gray-400 font-semibold uppercase">Card Image URL</label>
+                                <input type="text" value={proj.image} onChange={(e) => updateProjectPageProject(idx, 'image', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {projectSubTab === 'details' && (
+                <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
+                  <h2 className="text-lg font-bold text-white">Edit Project Details</h2>
+                  <div className="space-y-2">
+                    <label className="text-xs text-gray-400 font-semibold uppercase">Select Project</label>
+                    <select 
+                      value={selectedProjectId || ''} 
+                      onChange={(e) => setSelectedProjectId(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500"
+                    >
+                      <option value="" disabled>Select a project</option>
+                      {data.projectPage.projects.map(p => (
+                        <option key={p.id} value={p.id}>{p.title}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedProjectId && data.projectPage.projects.find(p => p.id === selectedProjectId) && (() => {
+                    const idx = data.projectPage.projects.findIndex(p => p.id === selectedProjectId);
+                    const pData = data.projectPage.projects[idx].details;
+                    if (!pData) return null;
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-white/10 pt-6">
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Hero Image URL</label>
+                          <input type="text" value={pData.heroImage} onChange={(e) => updateProjectPageProjectDetails(idx, 'heroImage', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">Category</label>
+                          <input type="text" value={pData.category} onChange={(e) => updateProjectPageProjectDetails(idx, 'category', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">The Challenge</label>
+                          <textarea rows={3} value={pData.challengeText} onChange={(e) => updateProjectPageProjectDetails(idx, 'challengeText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                        </div>
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">The Solution</label>
+                          <textarea rows={3} value={pData.solutionText} onChange={(e) => updateProjectPageProjectDetails(idx, 'solutionText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                        </div>
+                        
+                        <div className="space-y-1 md:col-span-2 border border-white/5 p-4 rounded-xl bg-white/[0.02]">
+                          <label className="text-xs text-gray-400 font-semibold uppercase block mb-2">Solution Bullets (comma separated)</label>
+                          <input 
+                            type="text" 
+                            value={pData.solutionPoints.join(', ')} 
+                            onChange={(e) => updateProjectPageProjectDetails(idx, 'solutionPoints', e.target.value.split(',').map(s => s.trim()).filter(s => s))} 
+                            className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" 
+                            placeholder="Point 1, Point 2, Point 3..."
+                          />
+                        </div>
+
+                        <div className="space-y-1 border border-white/5 p-4 rounded-xl bg-white/[0.02]">
+                          <label className="text-xs text-gray-400 font-semibold uppercase block mb-2">Solution Image 1 URL</label>
+                          <input type="text" value={pData.solutionImages[0] || ''} onChange={(e) => updateProjectPageProjectDetails(idx, 'solutionImages', [e.target.value, pData.solutionImages[1] || ''])} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+                        <div className="space-y-1 border border-white/5 p-4 rounded-xl bg-white/[0.02]">
+                          <label className="text-xs text-gray-400 font-semibold uppercase block mb-2">Solution Image 2 URL</label>
+                          <input type="text" value={pData.solutionImages[1] || ''} onChange={(e) => updateProjectPageProjectDetails(idx, 'solutionImages', [pData.solutionImages[0] || '', e.target.value])} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                        </div>
+
+                        <div className="space-y-1 md:col-span-2">
+                          <label className="text-xs text-gray-400 font-semibold uppercase">The Impact</label>
+                          <textarea rows={3} value={pData.impactText} onChange={(e) => updateProjectPageProjectDetails(idx, 'impactText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                        </div>
+
+                        <div className="space-y-4 md:col-span-2 border border-white/5 p-4 rounded-xl bg-white/[0.02] mt-4">
+                          <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">Testimonial</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <label className="text-xs text-gray-400 font-semibold uppercase">Name</label>
+                              <input type="text" value={pData.testimonialName} onChange={(e) => updateProjectPageProjectDetails(idx, 'testimonialName', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-xs text-gray-400 font-semibold uppercase">Role (e.g., CEO)</label>
+                              <input type="text" value={pData.testimonialRole} onChange={(e) => updateProjectPageProjectDetails(idx, 'testimonialRole', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-xs text-gray-400 font-semibold uppercase">Rating (e.g., 5.0)</label>
+                              <input type="text" value={pData.testimonialRating} onChange={(e) => updateProjectPageProjectDetails(idx, 'testimonialRating', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-xs text-gray-400 font-semibold uppercase">Avatar URL</label>
+                              <input type="text" value={pData.testimonialAvatar} onChange={(e) => updateProjectPageProjectDetails(idx, 'testimonialAvatar', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500" />
+                            </div>
+                            <div className="space-y-1 md:col-span-2">
+                              <label className="text-xs text-gray-400 font-semibold uppercase">Review Text</label>
+                              <textarea rows={3} value={pData.testimonialText} onChange={(e) => updateProjectPageProjectDetails(idx, 'testimonialText', e.target.value)} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500 resize-none"></textarea>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    )
+                  })()}
                 </div>
-              </div>
+              )}
+
             </div>
           )}
           
