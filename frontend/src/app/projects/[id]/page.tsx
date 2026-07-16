@@ -64,11 +64,26 @@ export default async function ProjectDetailsPage({ params }: { params: { id: str
 
   const project = projectPage.projects.find(p => p.id === params.id);
   
-  if (!project || !project.details) {
+  if (!project) {
     return notFound();
   }
 
-  const details = project.details;
+  const defaultDetails: ProjectDetailsData = {
+    heroImage: project.image || 'https://via.placeholder.com/1000x500',
+    category: project.subtitle.replace('- ', '') || 'Project Category',
+    challengeText: 'Describe the challenge here...',
+    solutionText: 'Describe the solution here...',
+    solutionPoints: [],
+    solutionImages: [],
+    impactText: 'Describe the impact here...',
+    testimonialAvatar: 'https://via.placeholder.com/150',
+    testimonialName: 'Client Name',
+    testimonialRole: 'Client Role',
+    testimonialRating: '5.0',
+    testimonialText: 'Testimonial text goes here...'
+  };
+
+  const details = project.details || defaultDetails;
 
   // Find two other random projects for the footer
   const otherProjects = projectPage.projects.filter(p => p.id !== project.id).slice(0, 2);
