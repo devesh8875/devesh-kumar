@@ -1216,7 +1216,12 @@ export default function AdminDashboard() {
 
               {projectSubTab === 'details' && (
                 <div className="bg-zinc-950/40 p-6 rounded-2xl border border-white/5 space-y-6">
-                  <h2 className="text-lg font-bold text-white">Project Details Page List</h2>
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-bold text-white">Project Details Page List</h2>
+                    <button onClick={addProjectPageProject} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-semibold transition-all">
+                      <Plus size={16} /> Add Project
+                    </button>
+                  </div>
                   <div className="space-y-6">
                     {data.projectPage.projects.map((proj, idx) => {
                       const pData = proj.details;
@@ -1228,6 +1233,7 @@ export default function AdminDashboard() {
                               <button onClick={() => setSelectedProjectId(selectedProjectId === proj.id ? null : proj.id)} className="text-cyan-400 hover:text-cyan-300 text-sm font-semibold">
                                 {selectedProjectId === proj.id ? 'Close' : 'Edit'}
                               </button>
+                              <button onClick={() => removeProjectPageProject(idx)} className="text-red-500 hover:text-red-400 text-sm font-semibold">Delete</button>
                             </div>
                           </div>
 
