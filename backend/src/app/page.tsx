@@ -17,8 +17,7 @@ import {
   AlertTriangle,
   HelpCircle,
   Phone,
-  LayoutDashboard,
-  ArrowUpRight
+  LayoutDashboard
 } from 'lucide-react';
 import '@/app/globals.css';
 
@@ -1221,28 +1220,16 @@ export default function AdminDashboard() {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <label className="text-xs text-gray-400 font-semibold uppercase">Select Project to Edit</label>
-                      <div className="flex gap-4 items-center">
-                        <select 
-                          value={selectedProjectId || ''} 
-                          onChange={(e) => setSelectedProjectId(e.target.value)}
-                          className="flex-1 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500"
-                        >
-                          <option value="" disabled>Select a project</option>
-                          {data.projectPage.projects.map(p => (
-                            <option key={p.id} value={p.id}>{p.title || 'Untitled Project'}</option>
-                          ))}
-                        </select>
-                        {selectedProjectId && (
-                          <a 
-                            href={`/projects/${selectedProjectId}`} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 text-sm font-bold transition-all whitespace-nowrap border border-cyan-500/20"
-                          >
-                            View Live <ArrowUpRight size={16} />
-                          </a>
-                        )}
-                      </div>
+                      <select 
+                        value={selectedProjectId || ''} 
+                        onChange={(e) => setSelectedProjectId(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-cyan-500"
+                      >
+                        <option value="" disabled>Select a project</option>
+                        {data.projectPage.projects.map(p => (
+                          <option key={p.id} value={p.id}>{p.title || 'Untitled Project'}</option>
+                        ))}
+                      </select>
                     </div>
 
                     {selectedProjectId && data.projectPage.projects.find(p => p.id === selectedProjectId) && (() => {
