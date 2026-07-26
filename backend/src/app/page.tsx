@@ -1235,6 +1235,7 @@ export default function AdminDashboard() {
                     {selectedProjectId && data.projectPage.projects.find(p => p.id === selectedProjectId) && (() => {
                       const proj = data.projectPage.projects.find(p => p.id === selectedProjectId);
                       const idx = data.projectPage.projects.findIndex(p => p.id === selectedProjectId);
+                      if (!proj) return null;
                       const pData = proj.details;
 
                       if (!pData) return null;
